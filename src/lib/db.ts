@@ -1,15 +1,14 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 
-// Singleton instance to prevent multiple connections in dev mode
 let db: Database.Database | null = null;
 
 export function getDb() {
   if (!db) {
     const dbPath = path.join(process.cwd(), 'shoes.db');
-    db = new Database(dbPath);
-    // Optimization for reading
-    db.pragma('journal_mode = WAL');
+    // Vercel serverless functions handle only a read-only filesystem.
+    // Opening with readonly: true is safer.
+    db = new Database(dbPath, { readonly: true });
   }
   return db;
 }
