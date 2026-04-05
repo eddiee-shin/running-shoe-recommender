@@ -33,7 +33,6 @@ export default function Home() {
     cushion: "any",
     pace: "any",
     mileage: "any",
-    budget: "any",
     releaseYear: "any",
     useCase: "",
   });
@@ -90,7 +89,6 @@ export default function Home() {
       cushion: "any",
       pace: "any",
       mileage: "any",
-      budget: "any",
       releaseYear: "any",
       useCase: "",
     });
@@ -165,9 +163,9 @@ export default function Home() {
             <QuestionCard title="보통 달리는 페이스는?" step="03">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <OptionButton label="상관없음" icon={<Infinity className="w-8 h-8" />} selected={prefs.pace === "any"} onClick={() => setPrefs({ ...prefs, pace: "any" })} />
-                <OptionButton label="조깅" icon={<Footprints className="w-8 h-8" />} selected={prefs.pace === "casual"} onClick={() => setPrefs({ ...prefs, pace: "casual" })} />
-                <OptionButton label="템포/중급" icon={<Activity className="w-8 h-8" />} selected={prefs.pace === "moderate"} onClick={() => setPrefs({ ...prefs, pace: "moderate" })} />
-                <OptionButton label="레이싱" icon={<Flame className="w-8 h-8" />} selected={prefs.pace === "fast"} onClick={() => setPrefs({ ...prefs, pace: "fast" })} />
+                <OptionButton label="6:30 이상" icon={<Footprints className="w-8 h-8" />} selected={prefs.pace === "casual"} onClick={() => setPrefs({ ...prefs, pace: "casual" })} />
+                <OptionButton label="5:00-6:30" icon={<Activity className="w-8 h-8" />} selected={prefs.pace === "moderate"} onClick={() => setPrefs({ ...prefs, pace: "moderate" })} />
+                <OptionButton label="5:00 미만" icon={<Flame className="w-8 h-8" />} selected={prefs.pace === "fast"} onClick={() => setPrefs({ ...prefs, pace: "fast" })} />
               </div>
             </QuestionCard>
 
@@ -175,23 +173,13 @@ export default function Home() {
               <QuestionCard title="월간 주행 거리는?" step="04" compact>
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   <OptionButton label="상관없음" icon={<Infinity className="w-8 h-8" />} selected={prefs.mileage === "any"} onClick={() => setPrefs({ ...prefs, mileage: "any" })} />
-                  <OptionButton label="적음" icon={<SignalLow className="w-8 h-8" />} selected={prefs.mileage === "low"} onClick={() => setPrefs({ ...prefs, mileage: "low" })} />
-                  <OptionButton label="보통" icon={<SignalMedium className="w-8 h-8" />} selected={prefs.mileage === "medium"} onClick={() => setPrefs({ ...prefs, mileage: "medium" })} />
-                  <OptionButton label="많음(장거리)" icon={<SignalHigh className="w-8 h-8" />} selected={prefs.mileage === "high"} onClick={() => setPrefs({ ...prefs, mileage: "high" })} />
+                  <OptionButton label="50km 미만" icon={<SignalLow className="w-8 h-8" />} selected={prefs.mileage === "low"} onClick={() => setPrefs({ ...prefs, mileage: "low" })} />
+                  <OptionButton label="50-150km" icon={<SignalMedium className="w-8 h-8" />} selected={prefs.mileage === "medium"} onClick={() => setPrefs({ ...prefs, mileage: "medium" })} />
+                  <OptionButton label="150km 이상" icon={<SignalHigh className="w-8 h-8" />} selected={prefs.mileage === "high"} onClick={() => setPrefs({ ...prefs, mileage: "high" })} />
                 </div>
               </QuestionCard>
 
-              <QuestionCard title="희망 예산은?" step="05" compact>
-                <p className="text-[11px] text-zinc-500 mt-1 mb-3 tracking-wide">* 글로벌 출시가(US 달러) 기준</p>
-                <div className="grid grid-cols-2 gap-3 mt-2">
-                  <OptionButton label="상관없음" icon={<Infinity className="w-8 h-8" />} selected={prefs.budget === "any"} onClick={() => setPrefs({ ...prefs, budget: "any" })} />
-                  <OptionButton label="$150 이하" icon={<Coins className="w-8 h-8" />} selected={prefs.budget === "budget"} onClick={() => setPrefs({ ...prefs, budget: "budget" })} />
-                  <OptionButton label="$200 이하" icon={<Banknote className="w-8 h-8" />} selected={prefs.budget === "mid"} onClick={() => setPrefs({ ...prefs, budget: "mid" })} />
-                  <OptionButton label="프리미엄" icon={<Crown className="w-8 h-8" />} selected={prefs.budget === "premium"} onClick={() => setPrefs({ ...prefs, budget: "premium" })} />
-                </div>
-              </QuestionCard>
-
-              <QuestionCard title="출시 연도 선호도?" step="06" compact>
+              <QuestionCard title="출시 연도 선호도?" step="05" compact>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2">
                   <OptionButton label="상관없음" icon={<Infinity className="w-8 h-8" />} selected={prefs.releaseYear === "any"} onClick={() => setPrefs({ ...prefs, releaseYear: "any" })} />
                   <OptionButton label="2026~" icon={<Calendar className="w-8 h-8" />} selected={prefs.releaseYear === "2026"} onClick={() => setPrefs({ ...prefs, releaseYear: "2026" })} />

@@ -80,22 +80,7 @@ export function recommendShoes(
     const reviewBonus = Math.min(shoe.review_count / 3000, 1);
     score += reviewBonus * 5;
     
-    // 7. 예산 필터
-    const budgetThresholds: Record<string, number> = {
-      'budget': 150,
-      'mid': 200,
-      'premium': 999,
-    };
-    if (prefs.budget !== 'any' && budgetThresholds[prefs.budget]) {
-      const maxPrice = budgetThresholds[prefs.budget];
-      if (shoe.price_usd > maxPrice) continue;
-      // 예산 내 저렴한 것 보너스
-      const priceRatio = 1 - (shoe.price_usd / maxPrice);
-      score += priceRatio * 5;
-      breakdown.push(`예산 내 ($${shoe.price_usd})`);
-    }
-
-    // 8. 출시 연도(최신) 보너스 (가중치 10%)
+    // 7. 출시 연도(최신) 보너스 (가중치 10%)
     if (prefs.releaseYear !== 'any') {
         const targetYear = parseInt(prefs.releaseYear, 10);
         if (shoe.release_year >= targetYear) {

@@ -27,7 +27,6 @@ export interface UserPreferences {
   cushion: 'low' | 'medium' | 'high' | 'any';
   pace: 'casual' | 'moderate' | 'fast' | 'any';
   mileage: 'low' | 'medium' | 'high' | 'any';
-  budget: 'any' | 'budget' | 'mid' | 'premium';
   releaseYear: 'any' | '2026' | '2025' | '2024';
   useCase: string;
 }
