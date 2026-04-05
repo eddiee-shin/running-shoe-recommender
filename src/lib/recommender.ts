@@ -94,6 +94,15 @@ export function recommendShoes(
       score += priceRatio * 5;
       breakdown.push(`예산 내 ($${shoe.price_usd})`);
     }
+
+    // 8. 출시 연도(최신) 보너스 (가중치 10%)
+    if (prefs.releaseYear !== 'any') {
+        const targetYear = parseInt(prefs.releaseYear, 10);
+        if (shoe.release_year >= targetYear) {
+            score += 10;
+            breakdown.push(`${targetYear}년형 이상 매칭 +10`);
+        }
+    }
     
     results.push({ shoe, score, breakdown });
   }

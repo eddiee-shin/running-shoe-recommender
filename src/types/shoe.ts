@@ -1,4 +1,6 @@
 export interface Shoe {
+  id: number;
+  likes: number;
   title: string;
   brand: string;
   model: string;
@@ -17,6 +19,7 @@ export interface Shoe {
   tags: string[];
   updated: string;
   source: string;
+  release_year: number;
 }
 
 export interface UserPreferences {
@@ -25,6 +28,7 @@ export interface UserPreferences {
   pace: 'casual' | 'moderate' | 'fast' | 'any';
   mileage: 'low' | 'medium' | 'high' | 'any';
   budget: 'any' | 'budget' | 'mid' | 'premium';
+  releaseYear: 'any' | '2026' | '2025' | '2024';
   useCase: string;
 }
 
@@ -49,6 +53,7 @@ export const TYPE_LABELS: Record<string, string> = {
 export function resolveImagePath(image: string): string {
   if (!image) return '/images/placeholder.jpg';
   if (image.startsWith('http')) return image;
+  if (image.startsWith('images/')) return '/' + image;
   if (image.startsWith('image/')) return '/' + image;
   if (image.startsWith('/')) return image;
   return '/images/' + image;
