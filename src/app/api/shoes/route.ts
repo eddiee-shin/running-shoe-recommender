@@ -1,14 +1,25 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { supabase } from '@/lib/db';
 
 export async function GET() {
   try {
-    const db = getDb();
-    const stmt = db.prepare('SELECT *, image_path as image, updated_at as updated FROM shoes');
-    const shoes = stmt.all();
-    return NextResponse.json(shoes);
+    const { data: shoes, error } = await supabase
+      .from('shoes')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+    
+    // Map field names for compatibility with the frontend
+    const mappedShoes = shoes.map(shoe => ({
+      ...shoe,
+      image: shoe.image_path,
+      updated: shoe.updated_at
+    }));
+
+    return NextResponse.json(mappedShoes);
   } catch (error) {
-    console.error('Failed to fetch shoes from db:', error);
+    console.error('Failed to fetch shoes from Supabase:', error);
     return NextResponse.json({ error: 'Failed to fetch shoes' }, { status: 500 });
   }
 }
