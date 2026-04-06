@@ -20,6 +20,7 @@ export interface Shoe {
   updated: string;
   source: string;
   release_year: number;
+  is_active?: boolean;
 }
 
 export interface UserPreferences {
@@ -27,7 +28,7 @@ export interface UserPreferences {
   cushion: 'low' | 'medium' | 'high' | 'any';
   pace: 'casual' | 'moderate' | 'fast' | 'any';
   mileage: 'low' | 'medium' | 'high' | 'any';
-  releaseYear: 'any' | '2026' | '2025' | '2024';
+  releaseYear: 'any' | '2026' | '2025' | '2024' | '2023' | '2022';
   useCase: string;
 }
 

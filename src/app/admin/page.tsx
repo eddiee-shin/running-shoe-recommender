@@ -21,7 +21,7 @@ export default function AdminPage() {
   const fetchShoes = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/shoes');
+      const res = await fetch('/api/admin/shoes');
       const data = await res.json();
       setShoes(data);
     } catch (e) {
@@ -85,6 +85,24 @@ export default function AdminPage() {
     } catch (error) {
       console.error('File upload failed:', error);
       setSaveStatus('Upload error');
+    }
+  };
+
+  const toggleActive = async (shoe: Shoe) => {
+    const nextState = !shoe.is_active;
+    try {
+      const res = await fetch(`/api/shoes/${shoe.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: nextState }),
+      });
+      if (res.ok) {
+        fetchShoes();
+      } else {
+        alert('상태 변경 실패');
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -169,12 +187,13 @@ export default function AdminPage() {
                 <th className="px-4 py-3 font-medium">Rating</th>
                 <th className="px-4 py-3 font-medium">Likes❤️</th>
                 <th className="px-4 py-3 font-medium">Image Path</th>
+                <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800 bg-zinc-950">
               {shoes.map(shoe => (
-                <tr key={shoe.id} className="hover:bg-zinc-900/50 transition-colors">
+                <tr key={shoe.id} className={`hover:bg-zinc-900/50 transition-colors ${!shoe.is_active ? 'opacity-50 grayscale' : ''}`}>
                   <td className="px-4 py-3 text-zinc-500">{shoe.id}</td>
                   
                   {editingId === shoe.id ? (
@@ -199,6 +218,9 @@ export default function AdminPage() {
                         </label>
                       </td>
                       <td className="px-4 py-3 text-right space-x-2">
+                        <button onClick={() => toggleActive(shoe)} className={`px-3 py-1 rounded font-medium text-xs ${shoe.is_active ? 'bg-amber-600 hover:bg-amber-500' : 'bg-emerald-600 hover:bg-emerald-500'}`}>
+                          {shoe.is_active ? 'Disable' : 'Enable'}
+                        </button>
                         <button onClick={() => handleSave(shoe.id)} className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 rounded font-medium text-xs">Save</button>
                         <button onClick={cancelEdit} className="px-3 py-1 bg-zinc-700 hover:bg-zinc-600 rounded font-medium text-xs">Cancel</button>
                       </td>
@@ -220,7 +242,15 @@ export default function AdminPage() {
                             <span className="text-zinc-500 text-xs truncate max-w-[100px]">{shoe.image}</span>
                         </div>
                       </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${shoe.is_active ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' : 'bg-rose-500/20 text-rose-400 border border-rose-500/50'}`}>
+                          {shoe.is_active ? 'Active' : 'Hidden'}
+                        </span>
+                      </td>
                       <td className="px-4 py-3 text-right space-x-2">
+                        <button onClick={() => toggleActive(shoe)} className={`px-3 py-1 rounded text-xs border ${shoe.is_active ? 'bg-amber-950/30 text-amber-400 border-amber-900 hover:bg-amber-900' : 'bg-emerald-950/30 text-emerald-400 border-emerald-900 hover:bg-emerald-900'}`}>
+                          {shoe.is_active ? 'Disable' : 'Enable'}
+                        </button>
                         <button onClick={() => startEdit(shoe)} className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded text-xs">Edit</button>
                         <button onClick={() => handleDelete(shoe.id)} className="px-3 py-1 bg-rose-950/50 hover:bg-rose-900 text-rose-300 border border-rose-900 rounded text-xs">Delete</button>
                       </td>

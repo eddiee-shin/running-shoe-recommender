@@ -6,12 +6,10 @@ export async function GET() {
     const { data: shoes, error } = await supabase
       .from('shoes')
       .select('*')
-      .eq('is_active', true)
       .order('id', { ascending: true });
 
     if (error) throw error;
     
-    // Map field names for compatibility with the frontend
     const mappedShoes = shoes.map(shoe => ({
       ...shoe,
       image: shoe.image_path,
@@ -20,7 +18,7 @@ export async function GET() {
 
     return NextResponse.json(mappedShoes);
   } catch (error) {
-    console.error('Failed to fetch shoes from Supabase:', error);
+    console.error('Failed to fetch all shoes for admin:', error);
     return NextResponse.json({ error: 'Failed to fetch shoes' }, { status: 500 });
   }
 }

@@ -14,7 +14,8 @@ export async function PUT(
     const allowedFields = [
       'brand', 'model', 'type', 'price_usd', 'weight_g', 'drop_mm',
       'stack_height_mm', 'cushion_score', 'pace_score', 'mileage_score',
-      'rating', 'review_count', 'one_liner', 'image_path', 'release_year'
+      'rating', 'review_count', 'one_liner', 'image_path', 'release_year',
+      'is_active'
     ];
     
     interface Updates {
