@@ -11,6 +11,13 @@ export default function AdminPage() {
   const [saveStatus, setSaveStatus] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pin, setPin] = useState('');
+  
+  // Filtering states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterBrand, setFilterBrand] = useState('All');
+  const [filterType, setFilterType] = useState('All');
+  const [filterYear, setFilterYear] = useState('All');
+  const [filterStatus, setFilterStatus] = useState('All');
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -161,18 +168,79 @@ export default function AdminPage() {
     return <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">Loading...</div>;
   }
 
+  // Brands extracted from shoe list
+  const brands = ['All', ...Array.from(new Set(shoes.map(s => s.brand)))].sort();
+  const years = ['All', ...Array.from(new Set(shoes.map(s => String(s.release_year))))].sort((a,b) => b.localeCompare(a));
+
+  const filteredShoes = shoes.filter(shoe => {
+    const matchesSearch = shoe.model.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          shoe.brand.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesBrand = filterBrand === 'All' || shoe.brand === filterBrand;
+    const matchesType = filterType === 'All' || shoe.type === filterType;
+    const matchesYear = filterYear === 'All' || String(shoe.release_year) === filterYear;
+    const matchesStatus = filterStatus === 'All' || 
+                          (filterStatus === 'Active' && shoe.is_active) || 
+                          (filterStatus === 'Hidden' && !shoe.is_active);
+    
+    return matchesSearch && matchesBrand && matchesType && matchesYear && matchesStatus;
+  });
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="flex justify-between items-center mb-8 pb-4 border-b border-zinc-800">
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-violet-500">
-            CoreFit Admin Dashboard
-          </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-bold text-zinc-500">{shoes.length} Models Indexed</span>
-            {saveStatus && <span className="text-sm font-bold text-cyan-400">{saveStatus}</span>}
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 pb-4 border-b border-zinc-800">
+          <div>
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-violet-500">
+              CoreFit Admin Dashboard
+            </h1>
+            <p className="text-zinc-500 text-sm mt-1">{filteredShoes.length} of {shoes.length} models visible</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            {saveStatus && <span className="text-sm font-bold text-cyan-400 animate-pulse">{saveStatus}</span>}
+            
+            <div className="relative group w-full md:w-64">
+              <input 
+                type="text" 
+                placeholder="Search model or brand..." 
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-2 px-4 text-sm focus:outline-none focus:border-cyan-500 transition-all pl-10"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+              <span className="absolute left-3 top-2.5 text-zinc-600">🔍</span>
+            </div>
           </div>
         </header>
+
+        {/* Filter Controls */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Brand</label>
+            <select className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-2 px-3 text-sm focus:outline-none focus:border-cyan-500" value={filterBrand} onChange={e => setFilterBrand(e.target.value)}>
+              {brands.map(b => <option key={b} value={b}>{b}</option>)}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Type</label>
+            <select className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-2 px-3 text-sm focus:outline-none focus:border-cyan-500" value={filterType} onChange={e => setFilterType(e.target.value)}>
+              <option value="All">All Types</option>
+              {SHOE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Year</label>
+            <select className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-2 px-3 text-sm focus:outline-none focus:border-cyan-500" value={filterYear} onChange={e => setFilterYear(e.target.value)}>
+              {years.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Status</label>
+            <select className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-2 px-3 text-sm focus:outline-none focus:border-cyan-500" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+              <option value="All">All Status</option>
+              <option value="Active">Active Only</option>
+              <option value="Hidden">Hidden Only</option>
+            </select>
+          </div>
+        </div>
 
         <div className="overflow-x-auto rounded-xl border border-zinc-800 shadow-2xl">
           <table className="w-full text-left text-sm whitespace-nowrap">
@@ -192,7 +260,7 @@ export default function AdminPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800 bg-zinc-950">
-              {shoes.map(shoe => (
+              {filteredShoes.map(shoe => (
                 <tr key={shoe.id} className={`hover:bg-zinc-900/50 transition-colors ${!shoe.is_active ? 'opacity-50 grayscale' : ''}`}>
                   <td className="px-4 py-3 text-zinc-500">{shoe.id}</td>
                   
